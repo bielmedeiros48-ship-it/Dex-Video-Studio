@@ -1,0 +1,72 @@
+{
+  "schema": "ollama-video-workflow.v1",
+  "id": "noticias-semana",
+  "editorial": {
+    "candidate_pool_target": 45,
+    "daily_discovery_minimum": 20,
+    "normal_selection_count": 5,
+    "extended_selection_maximum": 10,
+    "normal_duration_minutes": [8, 12],
+    "maximum_duration_minutes": 15,
+    "minimum_independent_sources": 2,
+    "rerank_every_day": true,
+    "scoring": {
+      "impact": 0.25,
+      "momentum": 0.20,
+      "source_reliability": 0.20,
+      "audience_relevance": 0.15,
+      "story_longevity": 0.10,
+      "visual_availability": 0.10
+    }
+  },
+  "stages": [
+    "brief",
+    "daily_research",
+    "deduplicate_and_verify",
+    "rank_candidates",
+    "select_stories",
+    "script_with_citations",
+    "humanize_and_fact_check",
+    "narration",
+    "transcription_and_timing",
+    "storyboard",
+    "media_rights_and_ingest",
+    "rough_cut",
+    "motion_graphics_and_captions",
+    "sound_design",
+    "color_and_audio_mix",
+    "draft_render",
+    "quality_control",
+    "human_approval",
+    "final_export",
+    "thumbnail_and_metadata",
+    "publish_with_confirmation"
+  ],
+  "approval_gates": [
+    "sources_verified",
+    "script_approved",
+    "voice_approved",
+    "storyboard_approved",
+    "draft_approved",
+    "qc_passed",
+    "publish_approved"
+  ],
+  "engines": {
+    "orchestrator": "ollama-video:latest",
+    "research": "agent-reach",
+    "voice": "VoiceStudio/audiocpp-dots",
+    "transcription": "Whisper local via filtro FFmpeg (large-v3-turbo)",
+    "silence_cut": "Auto-Editor",
+    "media_processing": "FFmpeg",
+    "motion": "HyperFrames",
+    "assembly": "FFmpeg/HyperFrames e DaVinci Resolve FCPXML; Remotion é opcional",
+    "quality_control": "FFmpeg/ffprobe"
+  },
+  "safety": {
+    "auto_publish": false,
+    "auto_delete_originals": false,
+    "download_requires_recorded_rights": true,
+    "paid_provider_requires_explicit_confirmation": true
+  }
+}
+

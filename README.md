@@ -113,4 +113,3 @@ As decisões sobre projetos de terceiros ficam em `INTEGRACOES-EXTERNAS.md` e
 nem recebem dados pessoais apenas por constarem no catálogo.
 
 
-

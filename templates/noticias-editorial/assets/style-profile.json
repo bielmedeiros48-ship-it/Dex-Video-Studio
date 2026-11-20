@@ -1,0 +1,2 @@
+{"name":"Editorial noturno","palette":{"ground":"#07111F","ink":"#F5F8FC","muted":"#9FB0C5","accent":"#2DD4BF","urgent":"#FB5B66"},"typography":{"family":"Segoe UI Variable","headline_max_lines":3,"minimum_body_px_1080p":32},"motion":{"normal_scene_seconds":[4,8],"transition_seconds":[0.3,0.7],"allowed":["push","whip","blur","scale","mask-reveal"],"avoid":["random-effect-per-cut","constant-zoom","flash-without-purpose"]}}
+

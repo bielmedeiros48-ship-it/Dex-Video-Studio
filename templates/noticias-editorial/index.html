@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="pt-BR" data-resolution="landscape">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1920, height=1080" />
+    <script src="./assets/vendor/gsap.min.js"></script>
+    <style>
+      @font-face { font-family:"Inter Local"; src:url("./assets/fonts/inter-latin-wght-normal.woff2") format("woff2"); font-style:normal; font-weight:100 900; font-display:block; }
+      :root { --ground:#07111f; --ink:#f5f8fc; --muted:#9fb0c5; --accent:#2dd4bf; --urgent:#fb5b66; --font:"Inter Local",sans-serif; }
+      * { box-sizing:border-box; }
+      html,body { margin:0; width:1920px; height:1080px; overflow:hidden; background:var(--ground); }
+      body { font-family:var(--font); color:var(--ink); }
+      #root { position:relative; width:100%; height:100%; overflow:hidden; background:radial-gradient(circle at 82% 15%,rgba(45,212,191,.13),transparent 32%),linear-gradient(135deg,#07111f,#0a182a 56%,#07111f); }
+      .grid { position:absolute; inset:0; opacity:.14; background-image:linear-gradient(rgba(255,255,255,.08) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.08) 1px,transparent 1px); background-size:72px 72px; transform:perspective(900px) rotateX(58deg) scale(1.5) translateY(300px); }
+      .rail { position:absolute; left:90px; top:88px; bottom:92px; width:6px; border-radius:10px; background:var(--accent); }
+      .content { position:absolute; left:140px; right:180px; top:130px; }
+      .kicker { display:inline-flex; align-items:center; gap:14px; color:var(--accent); font-size:28px; font-weight:750; letter-spacing:.12em; text-transform:uppercase; }
+      .dot { width:13px; height:13px; border-radius:50%; background:currentColor; box-shadow:0 0 25px currentColor; }
+      h1 { max-width:1450px; margin:38px 0 28px; font-size:94px; line-height:.98; letter-spacing:-.045em; text-wrap:balance; }
+      .summary { max-width:1220px; color:var(--muted); font-size:34px; line-height:1.35; }
+      .source { position:absolute; left:140px; bottom:92px; display:flex; gap:18px; align-items:center; color:var(--muted); font-size:28px; }
+      .source strong { color:var(--ink); }
+      .counter { position:absolute; right:100px; bottom:78px; font-size:88px; font-weight:800; color:#60738d; }
+      .progress { position:absolute; left:0; bottom:0; height:8px; width:100%; background:rgba(255,255,255,.08); }
+      .progress>div { width:0; height:100%; background:var(--accent); }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="12" data-width="1920" data-height="1080">
+      <div id="background-grid" class="grid clip" data-start="0" data-duration="12" data-track-index="0"></div>
+      <div id="accent-rail" class="rail clip" data-start="0" data-duration="12" data-track-index="1"></div>
+      <main id="story-content" class="content">
+        <div id="story-kicker" class="kicker clip" data-start="0" data-duration="12" data-track-index="2"><span class="dot"></span><span>NOTÍCIAS DA SEMANA</span></div>
+        <h1 id="headline" class="clip" data-start="0" data-duration="12" data-track-index="3">A manchete principal entra aqui</h1>
+        <p id="story-summary" class="summary clip" data-start="0" data-duration="12" data-track-index="4">Contexto curto, claro e verificável para preparar a próxima cena.</p>
+      </main>
+      <div id="source-credit" class="source clip" data-start="0" data-duration="12" data-track-index="5"><span>Fonte</span><strong>NOME DA FONTE · DATA</strong></div>
+      <div id="story-counter" class="counter clip" data-start="0" data-duration="12" data-track-index="6">01</div>
+      <div id="story-progress" class="progress"><div id="story-progress-fill" class="clip" data-start="0" data-duration="12" data-track-index="7"></div></div>
+    </div>
+    <script>
+      const tl=gsap.timeline({paused:true});
+      tl.fromTo(".rail",{scaleY:0,transformOrigin:"top"},{scaleY:1,duration:.55,ease:"power3.out"},0)
+        .fromTo(".kicker",{opacity:.25,y:24},{opacity:1,y:0,duration:.45,ease:"power3.out"},.18)
+        .fromTo("#headline",{opacity:.35,y:50,filter:"blur(12px)"},{opacity:1,y:0,filter:"blur(0px)",duration:.75,ease:"power4.out"},.32)
+        .fromTo(".summary",{opacity:.28,y:28},{opacity:1,y:0,duration:.55,ease:"power3.out"},.72)
+        .fromTo(".source",{opacity:0},{opacity:1,duration:.4},1.05)
+        .fromTo(".counter",{opacity:0,x:35},{opacity:1,x:0,duration:.5},.65)
+        .to(".progress>div",{width:"100%",duration:12,ease:"none"},0)
+        .to(".content,.source,.counter",{opacity:0,y:-22,duration:.45,ease:"power2.in"},11.35)
+        .to({},{duration:12},0);
+      window.__timelines["main"]=tl; tl.seek(0);
+    </script>
+  </body>
+</html>
+

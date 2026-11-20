@@ -1,0 +1,18 @@
+{
+  "schema": "ollama-video-qc.v1",
+  "video": {"width": 1920, "height": 1080, "fps": 30},
+  "sync": {"max_duration_difference_seconds": 0.5},
+  "audio": {"lufs_tolerance": 2, "true_peak_max_dbtp": -0.5},
+  "warnings": {
+    "black_segment_seconds": 0.5,
+    "freeze_seconds": 2,
+    "tail_silence_seconds": 1.2
+  },
+  "human_review": [
+    "safe-area",
+    "cropped-faces",
+    "source-attribution",
+    "caption-readability",
+    "story-coherence"
+  ]
+}

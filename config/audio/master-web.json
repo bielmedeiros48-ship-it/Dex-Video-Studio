@@ -1,0 +1,19 @@
+{
+  "schema": "ollama-video-audio.v1",
+  "audio": {
+    "sample_rate_hz": 48000,
+    "highpass_hz": 70,
+    "cut_edge_fade_ms": 30,
+    "denoise": "only_after_noise_measurement"
+  },
+  "loudness": {
+    "integrated_lufs": -14,
+    "loudness_range_lu": 7,
+    "true_peak_dbtp": -1
+  },
+  "mix": {
+    "music_under_voice_db": -22,
+    "sfx_below_voice_db": 10
+  }
+}
+

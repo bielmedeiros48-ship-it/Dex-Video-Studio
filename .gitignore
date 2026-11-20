@@ -1,0 +1,53 @@
+# Dados pessoais e artefatos gerados
+projects/
+state/
+logs/
+work/
+backups/
+private/
+
+# Modelos, mídia e ambientes locais
+models/
+*.gguf
+*.onnx
+*.bin
+*.zip
+*.wav
+*.mp3
+*.flac
+*.m4a
+*.aac
+*.mp4
+*.mov
+*.mkv
+*.jpg
+*.jpeg
+*.png
+*.log
+*.srt
+*.vtt
+*.fcpxml
+*.edl
+.venv/
+node_modules/
+**/node_modules/
+**/__pycache__/
+*.py[cod]
+**/.hyperframes/
+**/.hyperframes/
+
+# Credenciais e configuração da máquina
+.env
+.env.*
+!.env.example
+secrets/
+credentials*
+*.token
+*.key
+*.pem
+
+# Sistema e editores
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/

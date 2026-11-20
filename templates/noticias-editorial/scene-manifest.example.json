@@ -1,0 +1,2 @@
+{"schema":"ollama-video-scenes.v1","width":1920,"height":1080,"fps":30,"audio_clock":"assets/narracao-final.wav","scenes":[{"id":"s01-hook","type":"headline","start_ms":0,"end_ms":12000,"narration":"","visual":{"headline":"","summary":"","source":"","media":[]},"source_urls":[],"rights_verified":false,"render":"renders/s01-hook.mp4"}],"audio":{"voice_lufs":-14,"true_peak_dbtp":-1,"music_under_voice_db":-22,"sfx_below_voice_db":10},"status":"storyboard"}
+

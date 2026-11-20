@@ -1,0 +1,19 @@
+{
+  "id": "noticias",
+  "language": "pt-BR",
+  "tone": ["humano", "claro", "dinâmico", "sem sensacionalismo"],
+  "story_count": 5,
+  "source_rules": {
+    "minimum_independent_sources": 2,
+    "require_event_date": true,
+    "require_publication_date": true,
+    "prefer_primary_sources": true,
+    "reject_unverified_claims": true
+  },
+  "editorial_order": ["gancho", "contexto", "acontecimentos", "síntese", "encerramento"],
+  "publishing": {
+    "requires_human_review": true,
+    "auto_publish": false
+  }
+}
+

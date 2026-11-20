@@ -1,0 +1,46 @@
+{
+  "updated_at": "2026-11-20",
+  "policy": "Integração seletiva; código externo permanece isolado e nenhuma chave é obrigatória.",
+  "repositories": [
+    {
+      "name": "PeakCut",
+      "url": "https://github.com/haziqahmedqasmi/PeakCut",
+      "license": "MIT",
+      "role": "Referência e futuro sidecar para seleção de melhores momentos e clips verticais",
+      "status": "source-only",
+      "ollama_compatible": true,
+      "enabled": false,
+      "reason": "Conecta ao Ollama, mas o ASR incluído não oferece pt-BR; ativar somente após adaptar para o Whisper local existente."
+    },
+    {
+      "name": "OpenMontage",
+      "url": "https://github.com/OpenMontageInc/OpenMontage",
+      "license": "AGPL-3.0",
+      "role": "Referência externa para pipelines, revisão visual, documentário, Remotion e FFmpeg",
+      "status": "isolated-source-and-selected-skills",
+      "ollama_compatible": true,
+      "enabled": false,
+      "reason": "Mantido separado para não misturar automaticamente código AGPL ao motor público. As skills compatíveis foram selecionadas individualmente."
+    },
+    {
+      "name": "Battery Hub",
+      "url": "https://github.com/battery-hub/battery-hub",
+      "license": "MIT",
+      "role": "Monitor de bateria de periféricos HID",
+      "status": "not-selected",
+      "ollama_compatible": false,
+      "enabled": false,
+      "reason": "Não melhora pesquisa, edição, áudio ou revisão de vídeo. Pode ser avaliado futuramente apenas para o headset."
+    },
+    {
+      "name": "boringmarketer gists",
+      "url": "https://gist.github.com/boringmarketer",
+      "license": "not-declared",
+      "role": "Referência de marketing e copy",
+      "status": "reference-only",
+      "ollama_compatible": false,
+      "enabled": false,
+      "reason": "Não copiar nem redistribuir sem licença explícita; conceitos podem orientar uma implementação própria."
+    }
+  ]
+}
