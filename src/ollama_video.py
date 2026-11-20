@@ -18,6 +18,7 @@ import urllib.request
 import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta
 
+from craft_tools import inspect_image as craft_inspect_image, probe_media as craft_probe_media, versions as craft_versions
 from media_analysis import transcribe as transcribe_media, write_clip_ass, write_clip_srt, write_cmx3600, write_fcpxml
 from media_quality import master_audio as master_audio_file, quality_report, probe
 from smart_reframe import write_focus_commands
@@ -91,6 +92,10 @@ def doctor(_args) -> int:
     yt = executable("yt-dlp") or str(DATA_ROOT.parent / "repositorios/voicestudio/.venv/Scripts/yt-dlp.exe")
     checks.append(("yt-dlp", Path(yt).is_file(), yt))
     checks.append(("Agent Reach", AGENT_REACH.is_file(), str(AGENT_REACH)))
+    craft = craft_versions(DATA_ROOT / "state" / "craft")
+    for name, label in (("filmcraft", "FilmCraft CLI"), ("photocraft", "PhotoCraft CLI")):
+        item = craft[name]
+        checks.append((label, bool(item["available"]), item["version"] or item["path"] or "não encontrado"))
     try:
         tags = request_json(f"{OLLAMA_URL}/api/tags")
         names = [m.get("name") for m in tags.get("models", [])]
@@ -113,6 +118,36 @@ def doctor(_args) -> int:
         print(f"[{'OK' if ok else 'PENDENTE'}] {label}: {detail}")
     required = {"FFmpeg", "FFprobe", "Auto-Editor", "Ollama", "VoiceStudio API", "VoiceStudio motor", "Agent Reach"}
     return 0 if all(ok for label, ok, _ in checks if label in required) else 1
+
+
+def craft_doctor(_args) -> int:
+    report = {
+        "schema": "dex-video-craft-tools.v1",
+        "mode": "one-shot-local-cli",
+        "tools": craft_versions(DATA_ROOT / "state" / "craft"),
+        "security": {
+            "ambient_credentials_forwarded": False,
+            "persistent_tcp_control": False,
+            "filmcraft_mcp_enabled": False,
+            "reason": "FilmCraft MCP não limita raízes de arquivos; a Dex usa CLI de execução única por padrão.",
+        },
+    }
+    print(json.dumps(report, ensure_ascii=False, indent=2))
+    return 0 if all(item["available"] for item in report["tools"].values()) else 1
+
+
+def craft_probe(args) -> int:
+    source = Path(args.input).expanduser().resolve()
+    if not source.is_file():
+        raise FileNotFoundError(f"Arquivo não encontrado: {source}")
+    home = DATA_ROOT / "state" / "craft"
+    home.mkdir(parents=True, exist_ok=True)
+    if args.kind == "video":
+        result = craft_probe_media(source, home)
+    else:
+        result = craft_inspect_image(source, home, detail=args.detail)
+    print(json.dumps(result, ensure_ascii=False, indent=2))
+    return 0
 
 
 def project_path(name: str) -> Path:
@@ -1319,6 +1354,8 @@ def parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="dex-video", description="Orquestrador local de vídeo da Dex")
     sub = p.add_subparsers(dest="command", required=True)
     d = sub.add_parser("doctor"); d.set_defaults(func=doctor)
+    cd = sub.add_parser("craft-doctor"); cd.set_defaults(func=craft_doctor)
+    cp = sub.add_parser("craft-probe"); cp.add_argument("--kind", required=True, choices=("video", "image")); cp.add_argument("--input", required=True); cp.add_argument("--detail", action="store_true"); cp.set_defaults(func=craft_probe)
     n = sub.add_parser("new"); n.add_argument("--name", required=True); n.add_argument("--channel", default="noticias"); n.set_defaults(func=new_project)
     i = sub.add_parser("init-weekly-news"); i.add_argument("--project", required=True); i.add_argument("--week-start", required=True); i.set_defaults(func=init_weekly_news)
     q = sub.add_parser("plan"); q.add_argument("--project", required=True); q.add_argument("--brief", required=True); q.set_defaults(func=plan)

@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import json
+import os
 from pathlib import Path
 import sys
 import tempfile
@@ -14,6 +15,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 from media_analysis import write_clip_ass
 from smart_reframe import write_focus_commands
 from ollama_video import _normalize_media_queries, isolated_subprocess_environment
+from craft_tools import _environment as craft_environment
 
 
 class ShortRenderingTests(unittest.TestCase):
@@ -35,6 +37,18 @@ class ShortRenderingTests(unittest.TestCase):
         self.assertEqual(environment["PATH"], "tools")
         self.assertNotIn("GITHUB_TOKEN", environment)
         self.assertNotIn("OPENAI_API_KEY", environment)
+
+    def test_craft_environment_drops_credentials(self):
+        previous = os.environ.get("GITHUB_TOKEN")
+        os.environ["GITHUB_TOKEN"] = "secret"
+        try:
+            environment = craft_environment(Path("safe-home"))
+        finally:
+            if previous is None:
+                os.environ.pop("GITHUB_TOKEN", None)
+            else:
+                os.environ["GITHUB_TOKEN"] = previous
+        self.assertNotIn("GITHUB_TOKEN", environment)
 
     def test_ass_uses_short_chunks_and_safe_area(self):
         with tempfile.TemporaryDirectory() as folder:

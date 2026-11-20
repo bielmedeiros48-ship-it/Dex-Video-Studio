@@ -25,10 +25,19 @@ O Ollama decide e registra o plano. Ferramentas determinísticas executam mídia
 FFmpeg, Auto-Editor, VoiceStudio e, quando autorizado, yt-dlp. O modelo não recebe
 permissão genérica para executar comandos do Windows.
 
+FilmCraft e PhotoCraft são integrações locais opcionais. A Dex usa seus CLIs de
+execução única para inspecionar mídia sem encaminhar credenciais do ambiente.
+O MCP persistente do FilmCraft fica desligado por padrão porque não restringe
+raízes de arquivo; a ausência dos aplicativos não interrompe FFmpeg, DaVinci ou
+as demais etapas do fluxo.
+
 ## Início rápido
 
 ```powershell
 .\Dex-Video.ps1 doctor
+.\Dex-Video.ps1 craft-doctor
+.\Dex-Video.ps1 craft-probe --kind video --input "C:\caminho\video.mp4"
+.\Dex-Video.ps1 craft-probe --kind image --input "C:\caminho\thumbnail.psd"
 .\Dex-Video.ps1 new --name noticia-semanal --channel noticias
 .\Dex-Video.ps1 init-weekly-news --project noticia-semanal --week-start 2026-11-16
 .\Dex-Video.ps1 collect-news --project noticia-semanal --query "principais notícias do mundo hoje" --limit 20
