@@ -38,6 +38,7 @@ as demais etapas do fluxo.
 .\Dex-Video.ps1 craft-doctor
 .\Dex-Video.ps1 craft-probe --kind video --input "C:\caminho\video.mp4"
 .\Dex-Video.ps1 craft-probe --kind image --input "C:\caminho\thumbnail.psd"
+.\Dex-Video.ps1 craft-timeline --project noticia-semanal --input "C:\caminho\video.mp4"
 .\Dex-Video.ps1 new --name noticia-semanal --channel noticias
 .\Dex-Video.ps1 init-weekly-news --project noticia-semanal --week-start 2026-11-16
 .\Dex-Video.ps1 collect-news --project noticia-semanal --query "principais notícias do mundo hoje" --limit 20

@@ -92,3 +92,56 @@ def inspect_image(source: Path, home: Path, detail: bool = False) -> dict:
     if detail:
         command.append("--detail")
     return _run_json(command, home)
+
+
+def create_filmcraft_timeline(source: Path, output: Path, home: Path) -> dict:
+    executable = filmcraft_cli()
+    if not executable:
+        raise FileNotFoundError("filmcraft-cli não foi encontrado.")
+    if output.exists():
+        raise FileExistsError(f"A timeline já existe: {output}")
+    output.parent.mkdir(parents=True, exist_ok=True)
+    building = output.with_name(f"{output.stem}.building.fcproj")
+    if building.exists():
+        raise FileExistsError(f"Existe uma construção incompleta: {building}")
+    try:
+        imported = _run_json([str(executable), "--save-as", str(building), "import", str(source)], home, timeout=900)
+        items = imported.get("items") or []
+        if len(items) != 1:
+            raise RuntimeError("O FilmCraft não retornou exatamente um item importado.")
+        media = probe_media(source, home)
+        video = media.get("video") or {}
+        frame_rate = video.get("frame_rate") or {}
+        numerator = int(frame_rate.get("num") or 30)
+        denominator = int(frame_rate.get("den") or 1)
+        sequence = _run_json([
+            str(executable), "--project", str(building), "--save", "exec", "file.newSequence",
+            json.dumps({
+                "name": "Dex Timeline",
+                "width": int(video.get("width") or 1920),
+                "height": int(video.get("height") or 1080),
+                "fps": numerator / denominator,
+                "video": 3,
+                "audio": 3,
+            }),
+        ], home)
+        placed = _run_json([
+            str(executable), "--project", str(building), "--save", "exec", "timeline.place",
+            json.dumps({
+                "item": items[0], "track": "V1", "audioTrack": "A1", "seconds": 0,
+                "insert": False, "video": True, "audio": True, "matchSequence": False,
+            }),
+        ], home)
+        inspected = _run_json([str(executable), "--project", str(building), "inspect", "sequence"], home)
+        building.replace(output)
+        return {
+            "project": str(output),
+            "media_item": items[0],
+            "sequence": sequence.get("sequence"),
+            "clips": placed.get("clips", []),
+            "settings": inspected.get("settings", {}),
+        }
+    except Exception:
+        if building.exists():
+            building.unlink()
+        raise

@@ -18,7 +18,7 @@ import urllib.request
 import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta
 
-from craft_tools import inspect_image as craft_inspect_image, probe_media as craft_probe_media, versions as craft_versions
+from craft_tools import create_filmcraft_timeline, inspect_image as craft_inspect_image, probe_media as craft_probe_media, versions as craft_versions
 from media_analysis import transcribe as transcribe_media, write_clip_ass, write_clip_srt, write_cmx3600, write_fcpxml
 from media_quality import master_audio as master_audio_file, quality_report, probe
 from smart_reframe import write_focus_commands
@@ -146,6 +146,22 @@ def craft_probe(args) -> int:
         result = craft_probe_media(source, home)
     else:
         result = craft_inspect_image(source, home, detail=args.detail)
+    print(json.dumps(result, ensure_ascii=False, indent=2))
+    return 0
+
+
+def craft_timeline(args) -> int:
+    source = Path(args.input).expanduser().resolve()
+    if not source.is_file():
+        raise FileNotFoundError(f"Arquivo não encontrado: {source}")
+    output_name = Path(args.output)
+    if output_name.name != args.output or output_name.suffix.lower() != ".fcproj":
+        raise ValueError("Use somente um nome de arquivo terminado em .fcproj para --output.")
+    target = project_path(args.project) / "05-timeline" / output_name
+    home = DATA_ROOT / "state" / "craft"
+    home.mkdir(parents=True, exist_ok=True)
+    result = create_filmcraft_timeline(source, target, home)
+    result["next"] = "Abra o .fcproj no FilmCraft para revisar; o original foi preservado."
     print(json.dumps(result, ensure_ascii=False, indent=2))
     return 0
 
@@ -1356,6 +1372,7 @@ def parser() -> argparse.ArgumentParser:
     d = sub.add_parser("doctor"); d.set_defaults(func=doctor)
     cd = sub.add_parser("craft-doctor"); cd.set_defaults(func=craft_doctor)
     cp = sub.add_parser("craft-probe"); cp.add_argument("--kind", required=True, choices=("video", "image")); cp.add_argument("--input", required=True); cp.add_argument("--detail", action="store_true"); cp.set_defaults(func=craft_probe)
+    ct = sub.add_parser("craft-timeline"); ct.add_argument("--project", required=True); ct.add_argument("--input", required=True); ct.add_argument("--output", default="dex-filmcraft.fcproj"); ct.set_defaults(func=craft_timeline)
     n = sub.add_parser("new"); n.add_argument("--name", required=True); n.add_argument("--channel", default="noticias"); n.set_defaults(func=new_project)
     i = sub.add_parser("init-weekly-news"); i.add_argument("--project", required=True); i.add_argument("--week-start", required=True); i.set_defaults(func=init_weekly_news)
     q = sub.add_parser("plan"); q.add_argument("--project", required=True); q.add_argument("--brief", required=True); q.set_defaults(func=plan)

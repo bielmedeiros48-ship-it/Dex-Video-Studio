@@ -14,8 +14,9 @@ adaptadores opcionais e substituíveis:
 1. FFmpeg e DaVinci continuam sendo o caminho principal e de contingência.
 2. `craft-doctor` detecta versões e caminhos sem iniciar servidores.
 3. `craft-probe` inspeciona vídeo ou imagem com argumentos fixos e validados.
-4. Credenciais do ambiente não são encaminhadas aos processos Craft.
-5. Nenhum servidor TCP permanece aberto por padrão.
+4. `craft-timeline` cria um `.fcproj` editável com a mídia em V1/A1.
+5. Credenciais do ambiente não são encaminhadas aos processos Craft.
+6. Nenhum servidor TCP permanece aberto por padrão.
 
 ## MCP
 
