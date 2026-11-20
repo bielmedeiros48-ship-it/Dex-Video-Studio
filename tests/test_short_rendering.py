@@ -13,10 +13,20 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from media_analysis import write_clip_ass
 from smart_reframe import write_focus_commands
-from ollama_video import isolated_subprocess_environment
+from ollama_video import _normalize_media_queries, isolated_subprocess_environment
 
 
 class ShortRenderingTests(unittest.TestCase):
+    def test_media_queries_reject_urls_and_require_every_scene(self):
+        result = _normalize_media_queries({"items": [
+            {"order": 1, "queries": ["  mapa   do Brasil  ", "https://example.com", "mapa do Brasil"]},
+            {"order": 2, "queries": ["global technology news"]},
+        ]}, {1, 2})
+        self.assertEqual(result["1"], ["mapa do Brasil"])
+        self.assertEqual(result["2"], ["global technology news"])
+        with self.assertRaises(RuntimeError):
+            _normalize_media_queries({"items": [{"order": 1, "queries": ["mapa"]}]}, {1, 2})
+
     def test_external_helper_environment_drops_credentials(self):
         environment = isolated_subprocess_environment(
             Path("safe-home"),

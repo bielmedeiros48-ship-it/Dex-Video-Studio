@@ -1,4 +1,4 @@
-# Guia de qualidade do Ollama Video Studio
+# Guia de qualidade do Dex Video Studio
 
 ## Linha visual
 

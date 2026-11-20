@@ -129,7 +129,7 @@ Format: Layer, Start, End, Style, Name, MarginL, MarginR, MarginV, Effect, Text
 def write_cmx3600(source: Path, clips: list[dict], output: Path, fps: int) -> None:
     reel = "SOURCE"
     record_at = 0.0
-    lines = ["TITLE: OLLAMA VIDEO HIGHLIGHTS", "FCM: NON-DROP FRAME", ""]
+    lines = ["TITLE: DEX VIDEO HIGHLIGHTS", "FCM: NON-DROP FRAME", ""]
     for index, clip in enumerate(clips, 1):
         start = float(clip["start"])
         end = float(clip["end"])
@@ -167,7 +167,7 @@ def write_fcpxml(source: Path, clips: list[dict], output: Path, metadata: dict) 
     })
     ET.SubElement(asset, "media-rep", {"kind": "original-media", "src": source.as_uri()})
     library = ET.SubElement(root, "library")
-    event = ET.SubElement(library, "event", {"name": "Ollama Video Highlights"})
+    event = ET.SubElement(library, "event", {"name": "Dex Video Highlights"})
     project = ET.SubElement(event, "project", {"name": f"{source.stem} - melhores momentos"})
     sequence_attributes = {"tcStart": "0s", "format": "r1", "tcFormat": "NDF"}
     if audio:

@@ -1,6 +1,6 @@
 # Procedimento de produção de vídeo
 
-Esta é a ordem oficial do Ollama Video Studio. Ela combina o pipeline simples do
+Esta é a ordem oficial do Dex Video Studio. Ela combina o pipeline simples do
 MoneyPrinterTurbo com os gates de rascunho, verificação e controle de qualidade do
 AIEV. O Ollama organiza e decide; ferramentas determinísticas executam mídia.
 

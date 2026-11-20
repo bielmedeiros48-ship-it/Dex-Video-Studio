@@ -1,34 +1,54 @@
-# Ollama Video Studio
+# Dex Video Studio
 
-Motor local do Dex para transformar o Ollama em orquestrador de edição.
+Motor local, privado e revisável para produção audiovisual assistida pela **Dex**.
+O Ollama é o runtime atual do modelo; a identidade, os fluxos e as ferramentas
+pertencem ao projeto Dex.
+
+> **Status:** desenvolvimento ativo · **Execução:** local-first · **Publicação:**
+> sempre exige confirmação humana.
+
+## Visão geral
+
+```mermaid
+flowchart LR
+    A[Pesquisa e fontes] --> B[Seleção e verificação]
+    B --> C[Roteiro revisável]
+    C --> D[Voz pt-BR]
+    D --> E[Storyboard e direitos]
+    E --> F[Montagem e motion]
+    F --> G[Áudio, cor e QC]
+    G --> H[Aprovação humana]
+    H --> I[Exportação]
+```
 
 O Ollama decide e registra o plano. Ferramentas determinísticas executam mídia:
 FFmpeg, Auto-Editor, VoiceStudio e, quando autorizado, yt-dlp. O modelo não recebe
 permissão genérica para executar comandos do Windows.
 
-## Comandos
+## Início rápido
 
 ```powershell
-.\Ollama-Video.ps1 doctor
-.\Ollama-Video.ps1 new --name noticia-semanal --channel noticias
-.\Ollama-Video.ps1 init-weekly-news --project noticia-semanal --week-start 2026-11-16
-.\Ollama-Video.ps1 collect-news --project noticia-semanal --query "principais notícias Brasil e mundo hoje" --limit 20
-.\Ollama-Video.ps1 rank-news --project noticia-semanal --count 5
-.\Ollama-Video.ps1 plan --project noticia-semanal --brief "Cinco acontecimentos relevantes da semana"
-.\Ollama-Video.ps1 research --project noticia-semanal --query "notícias importantes desta semana Brasil" --limit 8
-.\Ollama-Video.ps1 draft --project noticia-semanal --brief "Cinco acontecimentos em linguagem humana e sóbria"
-.\Ollama-Video.ps1 storyboard --project noticia-semanal
-.\Ollama-Video.ps1 narrate --project noticia-semanal --text "Texto aprovado" --voice demo0001
-.\Ollama-Video.ps1 silence --project noticia-semanal --input "C:\caminho\video.mp4"
-.\Ollama-Video.ps1 transcribe --project noticia-semanal --input "C:\caminho\video.mp4" --gpu
-.\Ollama-Video.ps1 highlights --project noticia-semanal --input "C:\caminho\video.mp4" --count 5 --gpu
-.\Ollama-Video.ps1 render-highlights --project noticia-semanal
-.\Ollama-Video.ps1 render-shorts --project noticia-semanal
-.\Ollama-Video.ps1 auto-highlights --project noticia-semanal --input "C:\caminho\video.mp4" --count 5 --gpu
-.\Ollama-Video.ps1 master-audio --project noticia-semanal --input "C:\caminho\voz.wav"
-.\Ollama-Video.ps1 qc --project noticia-semanal --input "C:\caminho\video-final.mp4"
-.\Ollama-Video.ps1 qc --project noticia-semanal --input "C:\caminho\short.mp4" --profile shorts-1080x1920
-.\Ollama-Video.ps1 review-video --project noticia-semanal --input "C:\caminho\video-final.mp4"
+.\Dex-Video.ps1 doctor
+.\Dex-Video.ps1 new --name noticia-semanal --channel noticias
+.\Dex-Video.ps1 init-weekly-news --project noticia-semanal --week-start 2026-11-16
+.\Dex-Video.ps1 collect-news --project noticia-semanal --query "principais notícias do mundo hoje" --limit 20
+.\Dex-Video.ps1 rank-news --project noticia-semanal --count 5
+.\Dex-Video.ps1 plan --project noticia-semanal --brief "Cinco acontecimentos relevantes da semana"
+.\Dex-Video.ps1 research --project noticia-semanal --query "notícias mundiais importantes desta semana" --limit 8
+.\Dex-Video.ps1 draft --project noticia-semanal --brief "Cinco acontecimentos em linguagem humana e sóbria"
+.\Dex-Video.ps1 storyboard --project noticia-semanal
+.\Dex-Video.ps1 media-queries --project noticia-semanal
+.\Dex-Video.ps1 media-candidates --project noticia-semanal --limit 5
+.\Dex-Video.ps1 narrate --project noticia-semanal --text "Texto aprovado" --voice demo0001
+.\Dex-Video.ps1 silence --project noticia-semanal --input "C:\caminho\video.mp4"
+.\Dex-Video.ps1 transcribe --project noticia-semanal --input "C:\caminho\video.mp4" --gpu
+.\Dex-Video.ps1 highlights --project noticia-semanal --input "C:\caminho\video.mp4" --count 5 --gpu
+.\Dex-Video.ps1 render-highlights --project noticia-semanal
+.\Dex-Video.ps1 render-shorts --project noticia-semanal
+.\Dex-Video.ps1 auto-highlights --project noticia-semanal --input "C:\caminho\video.mp4" --count 5 --gpu
+.\Dex-Video.ps1 master-audio --project noticia-semanal --input "C:\caminho\voz.wav"
+.\Dex-Video.ps1 qc --project noticia-semanal --input "C:\caminho\video-final.mp4"
+.\Dex-Video.ps1 review-video --project noticia-semanal --input "C:\caminho\video-final.mp4"
 ```
 
 `silence` gera uma timeline FCPXML editável para importar no DaVinci Resolve. O
@@ -58,7 +78,7 @@ relatório em `06-revisao`. O perfil atual é YouTube 1080p/30 fps e -14 LUFS.
 
 `review-video` cria uma folha com quadros distribuídos pelo vídeo e mede mudanças
 visuais bruscas, quadros escuros ou desfocados, presença e centralização de rostos.
-O relatório é comum ao Ollama Video Studio e ao Codex; a aprovação estética ainda
+O relatório é comum ao Dex Video Studio e ao Codex; a aprovação estética ainda
 exige inspeção da folha por uma pessoa ou por um modelo com visão.
 
 O comando `draft` rejeita URLs inventadas pelo modelo. O resultado continua sendo
@@ -67,6 +87,11 @@ um rascunho: ele não é narrado nem publicado sem aprovação.
 `storyboard` converte o roteiro revisado em cenas rastreáveis com direção visual,
 fontes, mídia, transição, som, direitos e aprovação. Ele não baixa mídia nem renderiza
 antes que os campos pendentes sejam preenchidos.
+
+`media-queries` transforma cada cena aprovada em termos de busca limitados ao roteiro.
+`media-candidates` consulta o Wikimedia Commons, aceita apenas licenças compatíveis e
+gera candidatos com autor, licença e página de origem para revisão humana. Nada é
+baixado ou incorporado à edição sem registro de direitos.
 
 `rank-news` aplica os pesos editoriais ao conjunto semanal, em lotes pequenos para
 não estourar o contexto local. O ranking é explicitamente preliminar: assuntos com
@@ -92,7 +117,7 @@ Whisper que já existem, sem baixar outra cópia:
 .\MakeMyClip.ps1 ui
 ```
 
-O workspace padrão dele é `%USERPROFILE%\IA\Ollama-Video-Studio\state\makemyclip-workspace`.
+O workspace padrão legado é `%USERPROFILE%\IA\Ollama-Video-Studio\state\makemyclip-workspace`.
 O orquestrador pode usar um workspace por projeto por meio de
 `OLLAMA_VIDEO_MAKEMYCLIP_WORKSPACE`. A interface liga somente em `127.0.0.1` e não
 exige conta nem chave de API.
@@ -111,5 +136,31 @@ históricos e credenciais permanecem locais e são ignorados pelo Git.
 As decisões sobre projetos de terceiros ficam em `INTEGRACOES-EXTERNAS.md` e
 `config/integrations/repositories.json`. Repositórios externos não são executados
 nem recebem dados pessoais apenas por constarem no catálogo.
+
+## Estrutura do repositório
+
+| Área | Responsabilidade |
+|---|---|
+| `src/` | Orquestração, análise, reenquadramento e revisão de mídia |
+| `config/` | Fluxos, qualidade, áudio e provedores controlados |
+| `templates/` | Motion design e identidade editorial local |
+| `scripts/` | Verificações determinísticas de segurança |
+| `tests/` | Regressões de legenda, câmera, credenciais e QC |
+| `PROJECT-STATE.md` | Ponto de continuação sanitizado para outra IA |
+
+## Segurança por padrão
+
+- O repositório permanece privado durante o desenvolvimento.
+- Mídia, voz, modelos, credenciais, memória pessoal e logs não entram no Git.
+- Downloads exigem fonte e direitos registrados.
+- Publicação e exclusão de originais nunca são automáticas.
+- Processos externos recebem somente variáveis de ambiente permitidas.
+
+## Uso profissional do GitHub
+
+Trabalhe em uma branch por mudança, escreva commits pequenos e objetivos, abra um
+pull request para revisão e só integre depois dos testes e da verificação de
+segurança. Não coloque chaves, áudios, vídeos ou bancos pessoais em issues, commits
+ou arquivos do repositório.
 
 

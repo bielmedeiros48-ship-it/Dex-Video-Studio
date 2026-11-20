@@ -60,7 +60,7 @@ def request_json(url: str, payload: dict | None = None, timeout: int = 20):
     for attempt in range(3):
         req = urllib.request.Request(url, data=data, headers={
             "Content-Type": "application/json",
-            "User-Agent": "OllamaVideoStudio/0.1 (local personal video workflow)",
+            "User-Agent": "DexVideoStudio/0.1 (local personal video workflow)",
         })
         try:
             with urllib.request.urlopen(req, timeout=timeout) as response:
@@ -552,6 +552,85 @@ def storyboard(args) -> int:
     return 0
 
 
+MEDIA_QUERY_SCHEMA = {
+    "type": "object",
+    "properties": {
+        "items": {
+            "type": "array",
+            "items": {
+                "type": "object",
+                "properties": {
+                    "order": {"type": "integer", "minimum": 1},
+                    "queries": {
+                        "type": "array", "minItems": 1, "maxItems": 4,
+                        "items": {"type": "string", "minLength": 3, "maxLength": 100},
+                    },
+                },
+                "required": ["order", "queries"],
+            },
+        },
+    },
+    "required": ["items"],
+}
+
+
+def _normalize_media_queries(raw: dict, valid_orders: set[int]) -> dict[str, list[str]]:
+    result: dict[str, list[str]] = {}
+    for item in raw.get("items", []):
+        order = int(item.get("order", 0))
+        if order not in valid_orders:
+            continue
+        queries = []
+        for query in item.get("queries", []):
+            clean = re.sub(r"\s+", " ", str(query)).strip()
+            if 3 <= len(clean) <= 100 and not re.search(r"https?://|www\.", clean, re.I):
+                queries.append(clean)
+        if queries:
+            result[str(order)] = list(dict.fromkeys(queries))[:4]
+    missing = sorted(valid_orders - {int(key) for key in result})
+    if missing:
+        raise RuntimeError(f"O plano de mídia não cobriu as cenas: {missing}")
+    return result
+
+
+def media_queries(args) -> int:
+    target = project_path(args.project)
+    storyboard_path = target / "05-timeline" / "storyboard.json"
+    if not storyboard_path.is_file():
+        raise FileNotFoundError("Crie e revise o storyboard antes de planejar a mídia.")
+    board = _load_json(storyboard_path)
+    scenes = [
+        {
+            "order": scene.get("order"),
+            "kind": scene.get("kind"),
+            "narration": scene.get("narration"),
+            "visual_direction": scene.get("visual_direction"),
+            "source_urls": scene.get("source_urls", []),
+        }
+        for scene in board.get("scenes", [])
+    ]
+    if not scenes:
+        raise RuntimeError("O storyboard não contém cenas.")
+    prompt = (
+        "Crie termos de busca de mídia verificável para cada cena. Use somente fatos, nomes, lugares e "
+        "eventos presentes nas cenas; não invente acontecimentos. Gere de um a quatro termos curtos por cena, "
+        "preferindo uma busca factual, uma busca visual em inglês quando útil e uma alternativa de ilustração "
+        "ou gráfico explicativo. Não inclua URLs, comandos, nomes de bancos de imagem ou instruções.\n"
+        f"Cenas: {json.dumps(scenes, ensure_ascii=False)}"
+    )
+    response = request_json(f"{OLLAMA_URL}/api/generate", {
+        "model": MODEL, "prompt": prompt, "stream": False, "format": MEDIA_QUERY_SCHEMA,
+        "think": False, "options": {"temperature": 0.1, "num_ctx": 8192, "num_predict": 1200},
+    }, timeout=240)
+    raw = json.loads(response["response"])
+    valid_orders = {int(scene["order"]) for scene in scenes}
+    result = _normalize_media_queries(raw, valid_orders)
+    output = target / "04-midia" / "buscas-midia.json"
+    output.write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding="utf-8")
+    print(output)
+    return 0
+
+
 def _metadata_text(metadata: dict, key: str) -> str:
     value = str((metadata.get(key) or {}).get("value") or "")
     value = re.sub(r"<[^>]+>", " ", value)
@@ -679,7 +758,7 @@ def animatic(args) -> int:
         })
         ET.SubElement(asset, "media-rep", {"kind": "original-media", "src": scene.as_uri()})
     library = ET.SubElement(root, "library")
-    event = ET.SubElement(library, "event", {"name": "Ollama Video Studio"})
+    event = ET.SubElement(library, "event", {"name": "Dex Video Studio"})
     project = ET.SubElement(event, "project", {"name": "Canal Dark - Animatic"})
     spine = ET.SubElement(ET.SubElement(project, "sequence", {
         "tcStart": "0s", "format": "r1", "tcFormat": "NDF", "audioLayout": "stereo", "audioRate": "48k",
@@ -1237,7 +1316,7 @@ def review_video_command(args) -> int:
 
 
 def parser() -> argparse.ArgumentParser:
-    p = argparse.ArgumentParser(prog="ollama-video", description="Orquestrador local de vídeo")
+    p = argparse.ArgumentParser(prog="dex-video", description="Orquestrador local de vídeo da Dex")
     sub = p.add_subparsers(dest="command", required=True)
     d = sub.add_parser("doctor"); d.set_defaults(func=doctor)
     n = sub.add_parser("new"); n.add_argument("--name", required=True); n.add_argument("--channel", default="noticias"); n.set_defaults(func=new_project)
@@ -1248,6 +1327,7 @@ def parser() -> argparse.ArgumentParser:
     k = sub.add_parser("rank-news"); k.add_argument("--project", required=True); k.add_argument("--count", type=int, default=5, choices=range(1, 11)); k.set_defaults(func=rank_news)
     w = sub.add_parser("draft"); w.add_argument("--project", required=True); w.add_argument("--brief", required=True); w.add_argument("--max-sources", type=int, default=8, choices=range(2, 16)); w.set_defaults(func=draft)
     b = sub.add_parser("storyboard"); b.add_argument("--project", required=True); b.set_defaults(func=storyboard)
+    mq = sub.add_parser("media-queries"); mq.add_argument("--project", required=True); mq.set_defaults(func=media_queries)
     f = sub.add_parser("media-candidates"); f.add_argument("--project", required=True); f.add_argument("--limit", type=int, default=5, choices=range(1, 11)); f.set_defaults(func=media_candidates)
     g = sub.add_parser("animatic"); g.add_argument("--project", required=True); g.set_defaults(func=animatic)
     o = sub.add_parser("record-voice"); o.add_argument("--project", required=True); o.set_defaults(func=record_voice)

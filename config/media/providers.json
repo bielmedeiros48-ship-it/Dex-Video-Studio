@@ -1,0 +1,41 @@
+{
+  "schema": "dex-video-media-providers.v1",
+  "updated_at": "2026-11-20",
+  "policy": {
+    "download_requires_rights_record": true,
+    "store_source_page": true,
+    "store_author_and_license": true,
+    "reject_unknown_license": true,
+    "no_mass_download": true
+  },
+  "providers": [
+    {
+      "id": "wikimedia-commons",
+      "status": "enabled-candidates-only",
+      "authentication": "none",
+      "usage": "factual images, maps, diagrams and public-domain or Creative Commons media",
+      "review": "verify the license of every individual item"
+    },
+    {
+      "id": "internet-archive",
+      "status": "planned-manual-review",
+      "authentication": "none-for-public-metadata",
+      "usage": "historical and archival material",
+      "review": "rights vary by item; never infer permission from availability"
+    },
+    {
+      "id": "pixabay",
+      "status": "disabled-until-user-key",
+      "authentication": "api-key",
+      "usage": "stock images, video and simple animation",
+      "review": "record source and Pixabay Content License; respect caching and automation limits"
+    },
+    {
+      "id": "pexels",
+      "status": "manual-only",
+      "authentication": "api-key-currently-unavailable-for-new-issuance",
+      "usage": "stock photos and videos",
+      "review": "credit when possible and do not redistribute standalone content"
+    }
+  ]
+}
