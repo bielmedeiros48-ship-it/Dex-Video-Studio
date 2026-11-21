@@ -22,7 +22,9 @@
     {"name":"Cherry Studio","url":"https://github.com/CherryHQ/cherry-studio","phase":"reference","status":"not-selected","role":"interface de modelos; não acrescenta ferramenta ao motor"},
     {"name":"Twenty","url":"https://github.com/twentyhq/twenty","phase":"future-business","status":"catalog-only","role":"CRM"},
     {"name":"Penpot","url":"https://github.com/penpot/penpot","phase":"optional-design","status":"catalog-only","role":"design e thumbnails"},
-    {"name":"Plane","url":"https://github.com/makeplane/plane","phase":"future-business","status":"catalog-only","role":"gestão de projetos"}
+    {"name":"Plane","url":"https://github.com/makeplane/plane","phase":"future-business","status":"catalog-only","role":"gestão de projetos"},
+    {"name":"OpenSRE","url":"https://github.com/tracer-cloud/opensre","phase":"future-devops","status":"catalog-only","role":"investigação de falhas de CI/CD","reason":"Alpha; shell exige conta ativa, primeira execução usa modelo hospedado e telemetria é opt-out. Avaliar futuramente em ambiente isolado com Ollama e OPENSRE_NO_TELEMETRY=1."},
+    {"name":"WinRust","url":"https://github.com/Lemxy/WinRust","phase":"system-replacement","status":"rejected","role":"substituição do shell e utilitários do Windows","reason":"Exige administrador, binário não assinado e pode desativar Windows Search, ocultar a barra, substituir Explorer/Gerenciador de Tarefas e alterar serviços. Risco desproporcional para a máquina da Dex."}
   ]
 }
 
