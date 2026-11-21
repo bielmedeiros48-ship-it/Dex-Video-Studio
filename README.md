@@ -49,6 +49,7 @@ as demais etapas do fluxo.
 .\Dex-Video.ps1 storyboard --project noticia-semanal
 .\Dex-Video.ps1 media-queries --project noticia-semanal
 .\Dex-Video.ps1 media-candidates --project noticia-semanal --limit 5
+.\Dex-Video.ps1 render-dark --project noticia-semanal
 .\Dex-Video.ps1 narrate --project noticia-semanal --text "Texto aprovado" --voice demo0001
 .\Dex-Video.ps1 silence --project noticia-semanal --input "C:\caminho\video.mp4"
 .\Dex-Video.ps1 transcribe --project noticia-semanal --input "C:\caminho\video.mp4" --gpu
@@ -102,6 +103,11 @@ antes que os campos pendentes sejam preenchidos.
 `media-candidates` consulta o Wikimedia Commons, aceita apenas licenças compatíveis e
 gera candidatos com autor, licença e página de origem para revisão humana. Nada é
 baixado ou incorporado à edição sem registro de direitos.
+
+`render-dark` monta uma prévia horizontal 1080p a partir dos sete blocos de narração
+aprovados. O comando gera motion graphics locais, legendas curtas, tratamento de voz,
+trilha tonal discreta, créditos das fontes e uma timeline FCPXML editável. A saída
+continua marcada para revisão humana e nunca é publicada automaticamente.
 
 `rank-news` aplica os pesos editoriais ao conjunto semanal, em lotes pequenos para
 não estourar o contexto local. O ranking é explicitamente preliminar: assuntos com
@@ -172,5 +178,6 @@ Trabalhe em uma branch por mudança, escreva commits pequenos e objetivos, abra 
 pull request para revisão e só integre depois dos testes e da verificação de
 segurança. Não coloque chaves, áudios, vídeos ou bancos pessoais em issues, commits
 ou arquivos do repositório.
+
 
 
