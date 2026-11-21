@@ -1,0 +1,13 @@
+{
+  "schema": "dex-editorial-profile.v1",
+  "id": "dark-documentary-news",
+  "language": "pt-BR",
+  "purpose": "Documentário jornalístico com evidência visual, ritmo humano e motion graphics explicativo.",
+  "story": {"opening_seconds": [5, 12], "structure": ["gancho verificável", "contexto", "evidência", "consequência", "síntese"], "rule": "Uma ideia principal por plano; a imagem precisa provar, explicar ou ampliar a narração."},
+  "visual": {"preferred_sources": ["filmagem factual licenciada", "fotografia editorial licenciada", "mapa", "documento", "gráfico", "motion graphics explicativo"], "normal_shot_seconds": [2.5, 6.0], "reading_shot_seconds": [6.0, 10.0], "camera": ["drift lento", "push-in motivado", "pan suave", "parallax leve"], "transitions": ["corte motivado", "fade curto", "match cut direcional", "whip curto apenas em mudança de energia"], "avoid": ["aparência de apresentação de slides", "zoom aleatório", "texto cobrindo a evidência", "glitch repetido", "animação em toda palavra"]},
+  "motion": {"workflow": ["style frames", "storyboard", "animatic", "movimento", "som", "controle de qualidade"], "principles": ["movimento determinístico", "entrada com overshoot discreto", "saída com direção coerente", "continuidade espacial entre planos"], "three_d": "Usar 3D para explicar escala, processo, mapa, objeto ou conceito; nunca como decoração permanente."},
+  "captions": {"max_lines": 2, "words_per_chunk": [3, 7], "rule": "Destacar poucas palavras-chave e preservar a área segura."},
+  "audio": {"dialogue_first": true, "music_start_db": -22, "target_lufs": -14, "true_peak_dbtp": -1, "rule": "Sincronizar efeitos com acontecimentos significativos; não pontuar cada corte."},
+  "retention": {"candidate_story_days": 14, "unused_media_days": 30, "keep": ["fontes", "ranking", "roteiro aprovado", "direitos", "decisões de edição", "preset reutilizável"], "discard_after_approval": ["downloads temporários", "proxies", "renders intermediários rejeitados"], "never_auto_delete": ["originais", "voz autorizada", "exportação aprovada"]}
+}
+

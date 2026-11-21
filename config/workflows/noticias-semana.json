@@ -1,6 +1,7 @@
 {
   "schema": "ollama-video-workflow.v1",
   "id": "noticias-semana",
+  "editorial_profile": "config/editorial/dark-documentary.json",
   "editorial": {
     "candidate_pool_target": 45,
     "daily_discovery_minimum": 20,
@@ -69,4 +70,5 @@
     "paid_provider_requires_explicit_confirmation": true
   }
 }
+
 

@@ -14,11 +14,20 @@ sys.path.insert(0, str(Path(__file__).resolve().parents[1] / "src"))
 
 from media_analysis import write_clip_ass
 from smart_reframe import write_focus_commands
-from ollama_video import _normalize_media_queries, isolated_subprocess_environment
+from ollama_video import _normalize_media_queries, isolated_subprocess_environment, load_editorial_profile
 from craft_tools import _environment as craft_environment
 
 
 class ShortRenderingTests(unittest.TestCase):
+    def test_editorial_profile_is_loaded_and_validated(self):
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / "profile.json"
+            path.write_text(json.dumps({"schema": "dex-editorial-profile.v1", "id": "test"}), encoding="utf-8")
+            self.assertEqual(load_editorial_profile(path)["id"], "test")
+            path.write_text(json.dumps({"schema": "wrong", "id": "test"}), encoding="utf-8")
+            with self.assertRaises(ValueError):
+                load_editorial_profile(path)
+
     def test_media_queries_reject_urls_and_require_every_scene(self):
         result = _normalize_media_queries({"items": [
             {"order": 1, "queries": ["  mapa   do Brasil  ", "https://example.com", "mapa do Brasil"]},
@@ -99,3 +108,4 @@ class ShortRenderingTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+

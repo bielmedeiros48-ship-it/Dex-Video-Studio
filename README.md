@@ -120,6 +120,9 @@ alimentarão esse arquivo em vez de perder os candidatos do dia anterior.
 O template local de motion design está em `templates/noticias-editorial`. Ele usa
 HyperFrames, GSAP e fonte Inter locais; nenhuma CDN é necessária para renderizar.
 As regras editoriais e técnicas estão em `GUIA-QUALIDADE.md`.
+O perfil reutilizável do canal Dark está em
+`config/editorial/dark-documentary.json`; ele é carregado pelo `draft` e gravado
+no `storyboard`, para que o Ollama receba as regras visuais e sonoras do projeto.
 
 ## Timeline visual e desfazer
 
@@ -152,6 +155,8 @@ históricos e credenciais permanecem locais e são ignorados pelo Git.
 As decisões sobre projetos de terceiros ficam em `INTEGRACOES-EXTERNAS.md` e
 `config/integrations/repositories.json`. Repositórios externos não são executados
 nem recebem dados pessoais apenas por constarem no catálogo.
+O lote de ferramentas avaliado em 2026-11-21 está em
+`config/integrations/catalog-2026-11-21.json`, em formato legível pela Dex.
 
 ## Estrutura do repositório
 

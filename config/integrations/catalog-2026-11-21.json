@@ -1,0 +1,28 @@
+{
+  "schema": "dex-integration-catalog.v1",
+  "updated_at": "2026-11-21",
+  "rule": "Catálogo não autoriza instalar, executar, criar conta, enviar dados ou publicar.",
+  "items": [
+    {"name":"Agentes Chat","url":"https://github.com/agentes-chat/agentes-chat","phase":"future-business","status":"catalog-only","role":"colaboração entre agentes"},
+    {"name":"Podcastfy","url":"https://github.com/souzatharsis/podcastfy","phase":"reference","status":"not-selected","role":"roteiro em diálogo e áudio longo"},
+    {"name":"Anarlog","url":"https://github.com/fastrepl/anarlog","phase":"reference","status":"not-selected","role":"notas de reunião"},
+    {"name":"Kokoro","url":"https://github.com/hexgrad/kokoro","phase":"reference","status":"not-selected","role":"TTS compacto; não substituir voz PT-BR autorizada"},
+    {"name":"Inbox Zero","url":"https://github.com/elie222/inbox-zero","phase":"future-business","status":"catalog-only","role":"triagem de e-mail"},
+    {"name":"Documenso","url":"https://github.com/documenso/documenso","phase":"future-business","status":"catalog-only","role":"assinatura de documentos"},
+    {"name":"LibreTranslate","url":"https://github.com/LibreTranslate/LibreTranslate","phase":"optional-video","status":"disabled","role":"tradução offline de legendas"},
+    {"name":"Buzz","url":"https://github.com/chidiwilliams/buzz","phase":"optional-video","status":"on-demand","role":"transcrição e tradução offline com interface"},
+    {"name":"Cap","url":"https://github.com/CapSoftware/Cap","phase":"reference","status":"not-selected","role":"gravação de tela"},
+    {"name":"Vane","url":"https://github.com/ItzCrazyKns/Vane","phase":"reference","status":"not-selected","role":"pesquisa; sobrepõe ferramentas existentes"},
+    {"name":"Handy","url":"https://github.com/cjpais/Handy","phase":"optional-voice","status":"benchmark-only","role":"ditado offline e comparação de ASR"},
+    {"name":"Chatwoot","url":"https://github.com/chatwoot/chatwoot","phase":"future-business","status":"catalog-only","role":"atendimento e WhatsApp"},
+    {"name":"Postiz","url":"https://github.com/gitroomhq/postiz-app","phase":"future-publishing","status":"disabled","role":"agendamento de redes após aprovação"},
+    {"name":"SiYuan","url":"https://github.com/siyuan-note/siyuan","phase":"optional-knowledge","status":"disabled","role":"workspace local de conhecimento"},
+    {"name":"Cal DIY","url":"https://github.com/calcom/cal.diy","phase":"future-business","status":"catalog-only","role":"agendamento"},
+    {"name":"Upscayl","url":"https://github.com/upscayl/upscayl","phase":"optional-video","status":"on-demand","role":"upscale local de imagens"},
+    {"name":"Cherry Studio","url":"https://github.com/CherryHQ/cherry-studio","phase":"reference","status":"not-selected","role":"interface de modelos; não acrescenta ferramenta ao motor"},
+    {"name":"Twenty","url":"https://github.com/twentyhq/twenty","phase":"future-business","status":"catalog-only","role":"CRM"},
+    {"name":"Penpot","url":"https://github.com/penpot/penpot","phase":"optional-design","status":"catalog-only","role":"design e thumbnails"},
+    {"name":"Plane","url":"https://github.com/makeplane/plane","phase":"future-business","status":"catalog-only","role":"gestão de projetos"}
+  ]
+}
+

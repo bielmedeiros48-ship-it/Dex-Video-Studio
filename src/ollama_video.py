@@ -26,6 +26,7 @@ from video_review import review_video
 
 
 ROOT = Path(__file__).resolve().parents[1]
+EDITORIAL_PROFILE = ROOT / "config" / "editorial" / "dark-documentary.json"
 DATA_ROOT = Path(os.environ.get("OLLAMA_VIDEO_DATA", str(Path.home() / "IA/Ollama-Video-Studio")))
 PROJECTS = DATA_ROOT / "projects"
 OLLAMA_URL = "http://127.0.0.1:11434"
@@ -80,6 +81,15 @@ def executable(name: str) -> str | None:
 
 def auto_editor() -> Path | None:
     return next((p for p in AUTO_EDITOR_CANDIDATES if str(p) and p.is_file()), None)
+
+
+def load_editorial_profile(path: Path = EDITORIAL_PROFILE) -> dict:
+    if not path.is_file():
+        raise FileNotFoundError(f"Perfil editorial não encontrado: {path}")
+    profile = json.loads(path.read_text(encoding="utf-8"))
+    if profile.get("schema") != "dex-editorial-profile.v1" or not profile.get("id"):
+        raise ValueError("Perfil editorial inválido.")
+    return profile
 
 
 def doctor(_args) -> int:
@@ -531,6 +541,7 @@ def draft(args) -> int:
              "published_at": item.get("published_at"), "text": (item.get("text") or "")[:1800]}
             for item in items
         ]
+    editorial_profile = load_editorial_profile()
     prompt = (
         "Escreva um RASCUNHO de roteiro jornalístico humano e sóbrio usando apenas as fontes abaixo. "
         "Não transforme hipótese em fato. Cada segmento deve listar as URLs que sustentam a narração. "
@@ -540,6 +551,8 @@ def draft(args) -> int:
         "com 50 a 80 palavras, cada segmento com 120 a 180 palavras e encerramento com 50 a 80 palavras. Para cada segmento, "
         "classifique o tom como dense, neutral ou positive; indique uma trilha instrumental discreta e notas de "
         "edição concretas para zoom, destaque de texto, mapas, gráficos, transições naturais e SFX sem exagero.\n"
+        "Siga também o perfil editorial fornecido, sem copiar marcas, layouts ou textos das referências.\n"
+        f"Perfil editorial: {json.dumps(editorial_profile, ensure_ascii=False)}\n"
         f"Objetivo: {args.brief}\nFontes: {json.dumps(sources, ensure_ascii=False)}"
     )
     response = request_json(f"{OLLAMA_URL}/api/generate", {
@@ -592,8 +605,10 @@ def storyboard(args) -> int:
                        "rights_status": "pending", "approval": "pending"})
     if not scenes:
         raise RuntimeError("O roteiro não contém cenas aproveitáveis.")
+    editorial_profile = load_editorial_profile()
     result = {"schema": "ollama-video-storyboard.v1", "created_at": now(),
               "source_script": str(script_path), "status": "needs_human_review",
+              "editorial_profile": editorial_profile,
               "rules": {"originals_preserved": True, "one_job_at_a_time": True,
                         "media_requires_rights_record": True, "publish_requires_confirmation": True},
               "scenes": scenes}
