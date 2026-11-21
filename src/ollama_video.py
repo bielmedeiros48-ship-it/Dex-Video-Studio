@@ -1366,6 +1366,19 @@ def review_video_command(args) -> int:
     return 0
 
 
+def render_dark_command(args) -> int:
+    renderer = ROOT / "src" / "render_dark_news.py"
+    target = project_path(args.project)
+    completed = subprocess.run(
+        [sys.executable, str(renderer), "--project", str(target)],
+        text=True, capture_output=True, encoding="utf-8", errors="replace",
+    )
+    if completed.returncode:
+        raise RuntimeError(completed.stderr.strip() or completed.stdout.strip() or "Falha ao renderizar o vídeo Dark.")
+    print(completed.stdout.strip())
+    return 0
+
+
 def parser() -> argparse.ArgumentParser:
     p = argparse.ArgumentParser(prog="dex-video", description="Orquestrador local de vídeo da Dex")
     sub = p.add_subparsers(dest="command", required=True)
@@ -1387,6 +1400,7 @@ def parser() -> argparse.ArgumentParser:
     o = sub.add_parser("record-voice"); o.add_argument("--project", required=True); o.set_defaults(func=record_voice)
     u = sub.add_parser("set-voice"); u.add_argument("--project", required=True); u.add_argument("--profile", required=True); u.add_argument("--engine", default="audiocpp-dots"); u.add_argument("--language", default="pt-BR"); u.add_argument("--reference-text"); u.set_defaults(func=set_voice)
     e = sub.add_parser("dark-news"); e.add_argument("--project", default="canal-noticias"); e.add_argument("--per-query", type=int, default=10, choices=range(5, 21)); e.add_argument("--no-recorder", action="store_true"); e.set_defaults(func=dark_news)
+    rd = sub.add_parser("render-dark"); rd.add_argument("--project", default="canal-noticias"); rd.set_defaults(func=render_dark_command)
     v = sub.add_parser("narrate"); v.add_argument("--project", required=True); v.add_argument("--text", required=True); v.add_argument("--voice"); v.add_argument("--engine", default="audiocpp-dots"); v.add_argument("--language", default="pt-BR"); v.add_argument("--speed", type=float, default=1.0); v.add_argument("--output", default="narracao.wav"); v.set_defaults(func=narrate)
     j = sub.add_parser("narrate-script"); j.add_argument("--project", required=True); j.add_argument("--engine", default="audiocpp-dots"); j.add_argument("--language", default="pt-BR"); j.add_argument("--output", default="narracao-completa.wav"); j.set_defaults(func=narrate_script)
     s = sub.add_parser("silence"); s.add_argument("--project", required=True); s.add_argument("--input", required=True); s.add_argument("--margin", default="0.2s"); s.set_defaults(func=silence)
@@ -1412,4 +1426,5 @@ def main() -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
 
