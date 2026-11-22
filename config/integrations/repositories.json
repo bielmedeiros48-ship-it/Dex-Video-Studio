@@ -23,16 +23,6 @@
       "reason": "Mantido separado para não misturar automaticamente código AGPL ao motor público. As skills compatíveis foram selecionadas individualmente."
     },
     {
-      "name": "Battery Hub",
-      "url": "https://github.com/battery-hub/battery-hub",
-      "license": "MIT",
-      "role": "Monitor de bateria de periféricos HID",
-      "status": "not-selected",
-      "ollama_compatible": false,
-      "enabled": false,
-      "reason": "Não melhora pesquisa, edição, áudio ou revisão de vídeo. Pode ser avaliado futuramente apenas para o headset."
-    },
-    {
       "name": "boringmarketer gists",
       "url": "https://gist.github.com/boringmarketer",
       "license": "not-declared",
@@ -44,3 +34,4 @@
     }
   ]
 }
+
